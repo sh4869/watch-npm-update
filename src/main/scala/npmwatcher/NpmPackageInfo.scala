@@ -1,7 +1,6 @@
 package npmwatcher
 
 import io.circe._
-import io.circe.generic.JsonCodec
 import io.circe.generic.semiauto._
 
 case class NpmVersionInfo(
@@ -18,7 +17,8 @@ case class NpmPackageInfoContent(
 
 
 case class NpmPackageInfo(
-    doc: NpmPackageInfoContent
+    doc: NpmPackageInfoContent,
+    seq: Int,
 )
 
 object NpmPackageInfo {

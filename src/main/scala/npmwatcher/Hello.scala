@@ -12,25 +12,25 @@ import io.circe.Json
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import org.http4s._
-import org.http4s.client.blaze._
+import org.http4s.blaze.client.BlazeClientBuilder
 import org.http4s.implicits._
+import org.typelevel.jawn.Facade
 import org.typelevel.jawn.fs2._
 
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import scala.concurrent.ExecutionContext.global
 
 object Hello extends IOApp with LazyLogging {
 
-  implicit val f = io.circe.jawn.CirceSupportParser.facade
+  implicit val f: Facade[Json] = io.circe.jawn.CirceSupportParser.facade
   val lineBreak: Char = "\n".charAt(0)
   def run(args: List[String]): IO[ExitCode] = {
     val req = Request[IO](
       Method.GET,
       uri"https://replicate.npmjs.com/_changes?include_docs=true&feed=continuous"
     )
-    BlazeClientBuilder[IO](global).resource.use { client =>
+    BlazeClientBuilder[IO].resource.use { client =>
       client
         .stream(req)
         .flatMap(
